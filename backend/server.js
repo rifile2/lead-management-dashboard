@@ -1,7 +1,8 @@
 const express = require("express");
-const mongoose = require("mongoose"); // 
+const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const path = require("path");
 
 dotenv.config();
 
@@ -20,8 +21,16 @@ mongoose
         console.log(err.message);
     });
 
-// Routes
+// API Routes
 app.use("/api/leads", require("./routes/leadRoutes"));
+
+// ✅ Serve React frontend
+app.use(express.static(path.join(__dirname, "public")));
+
+// ✅ React routing support
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
